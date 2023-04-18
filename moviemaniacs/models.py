@@ -7,3 +7,9 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 # Create your models here.
+
+
+class Playlist(models.Model):
+    title = models.CharField(max_length=50, null=True)
+    # user_id
+    
