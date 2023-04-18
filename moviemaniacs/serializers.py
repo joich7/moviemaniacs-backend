@@ -1,5 +1,6 @@
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from .models import CustomUser, Child, Parent, Tag
+from .models import CustomUser
 from .fields import ForeignKeyField, CustomManyToManyField
 
 class CustomUserSerializer(serializers.ModelSerializer):
