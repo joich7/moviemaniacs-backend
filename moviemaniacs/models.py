@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth import get_user_model
+from django.conf import settings
 
 class CustomUser(AbstractUser):
     pass
@@ -11,5 +13,6 @@ class CustomUser(AbstractUser):
 
 class Playlist(models.Model):
     title = models.CharField(max_length=50, null=True)
-    # user_id
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    movie_id = models.IntegerField(null=True)
     
