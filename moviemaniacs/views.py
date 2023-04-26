@@ -4,8 +4,8 @@ from rest_framework import status, permissions, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import action
-from .models import CustomUser, Playlist
-from .serializers import CustomUserSerializer, PlaylistReadOnlySerializer
+from .models import CustomUser, Playlist, Playlist_movie, Review
+from .serializers import CustomUserSerializer, PlaylistSerializer, Playlist_MoviesSerializer, ReviewSerializer, UserReadSerializer
 import requests
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -38,13 +38,28 @@ class UserCreate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserDetail(generics.RetrieveAPIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+class UserDetail(generics.RetrieveUpdateAPIView):
+    permission_classes = (permissions.AllowAny)
     queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
+
+    def get_serializer_class(self):
+        print(self.request.method)
+        if self.request.method in ["POST", "PATCH", "DELETE"]:
+            return CustomUserSerializer
+        return UserReadSerializer
 # Create your views here.
 
 
 class PlaylistViewSet(viewsets.ModelViewSet):
     queryset = Playlist.objects.all()
-    serializer_class = PlaylistReadOnlySerializer
+    serializer_class = PlaylistSerializer
+
+
+class Playlist_MoviesViewSet(viewsets.ModelViewSet):
+    queryset = Playlist_movie.objects.all()
+    serializer_class = Playlist_MoviesSerializer
+
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer

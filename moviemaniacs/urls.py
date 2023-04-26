@@ -5,7 +5,10 @@ from .views import *
 from rest_framework import routers
 
 router = routers.DefaultRouter()
+
 router.register('playlists', PlaylistViewSet)
+router.register('reviews', ReviewViewSet)
+router.register('movies', Playlist_MoviesViewSet)
 
 
 urlpatterns = [

@@ -1,6 +1,6 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from .models import CustomUser, Playlist
+from .models import CustomUser, Playlist, Review, Playlist_movie
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -25,7 +25,34 @@ class CustomUserSerializer(serializers.ModelSerializer):
         return instance
 
 
-class PlaylistReadOnlySerializer(serializers.ModelSerializer):
+
+class PlaylistReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Playlist
-        fields = ['User_Id', 'title',]
+        fields = ['id', 'user', 'title',]
+
+class UserReadSerializer(serializers.ModelSerializer):
+    playlists = PlaylistReadSerializer(many=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ('email', 'username', 'first_name', 'last_name', 'playlists')
+
+
+class PlaylistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Playlist
+        fields = ['id', 'user', 'title',]
+
+
+class Playlist_MoviesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Playlist_movie
+        fields = ['id', 'playlist_id', 'movie_id', 'movie_name']
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['id', 'user', 'movie_id', 'headline',
+                  'movie_rating', 'description', 'date_posted']

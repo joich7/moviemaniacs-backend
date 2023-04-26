@@ -25,6 +25,10 @@ class Playlist(models.Model):
 class Playlist_movie(models.Model):
     playlist_id = models.ForeignKey('Playlist', on_delete=models.CASCADE)
     movie_id = models.IntegerField()
+    movie_name = models.CharField(max_length=50, null=True, blank=True)
+
+    def __str__(self):
+        return self.movie_name
 
 
 class Review(models.Model):
