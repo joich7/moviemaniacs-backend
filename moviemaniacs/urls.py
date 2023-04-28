@@ -6,15 +6,15 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 
+router.register('users', UserDetail)
 router.register('playlists', PlaylistViewSet)
 router.register('reviews', ReviewViewSet)
 router.register('movies', Playlist_MoviesViewSet)
-
+# router.register(r'userPlaylists', views.UserPlaylistsViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
     path('user/signup/', UserCreate.as_view(), name="create_user"),
-    path('users/<int:pk>/', UserDetail.as_view(), name="get_user_details"),
     path('user/login/', jwt_views.TokenObtainPairView.as_view(), name='token_create'),
     path('token/obtain/', jwt_views.TokenObtainPairView.as_view(),
          name='token_create'),  # override sjwt stock token

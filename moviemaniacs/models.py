@@ -15,15 +15,16 @@ class CustomUser(AbstractUser):
 
 class Playlist(models.Model):
     title = models.CharField(max_length=50)
-    user = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+  
 
     def __str__(self):
         return self.title
 
 
 class Playlist_movie(models.Model):
-    playlist_id = models.ForeignKey('Playlist', on_delete=models.CASCADE)
+    playlist = models.ForeignKey(
+        'Playlist', on_delete=models.CASCADE, related_name="movies", null=True, blank=True)
     movie_id = models.IntegerField()
     movie_name = models.CharField(max_length=50, null=True, blank=True)
 
