@@ -8,8 +8,11 @@ router = routers.DefaultRouter()
 
 router.register('users', UserDetail)
 router.register('playlists', PlaylistViewSet)
+router.register('playlistCreate', PlaylistWriteViewSet)
 router.register('reviews', ReviewViewSet)
 router.register('movies', Playlist_MoviesViewSet)
+router.register('favoritesPage', favoriteViewSet)
+
 # router.register(r'userPlaylists', views.UserPlaylistsViewSet)
 
 urlpatterns = [

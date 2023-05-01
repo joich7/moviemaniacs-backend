@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import action
 from .models import CustomUser, Playlist, Playlist_movie, Review
-from .serializers import CustomUserSerializer, PlaylistSerializer, Playlist_MoviesSerializer, ReviewSerializer
+from .serializers import CustomUserSerializer, PlaylistSerializer, Playlist_MoviesSerializer, ReviewSerializer, PlaylistWriteSerializer
 import requests
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -57,6 +57,10 @@ class UserDetail(viewsets.ModelViewSet):
 #         id = self.kwargs['id']
 #         return Playlist.objects.filter(user=user)
 
+class PlaylistWriteViewSet(viewsets.ModelViewSet):
+    queryset = Playlist.objects.all()
+    serializer_class = PlaylistWriteSerializer
+
 
 class PlaylistViewSet(viewsets.ModelViewSet):
     queryset = Playlist.objects.all()
@@ -69,11 +73,15 @@ class PlaylistViewSet(viewsets.ModelViewSet):
         if user.is_authenticated:
             queryset = queryset.filter(user=user)
 
-        mt = self.request.query_params.get('mt')
-        if mt is not None:
-            queryset = queryset.filter(title=mt)
-
+        movie_id = self.request.query_params.get('boof')
+        if movie_id is not None:
+            queryset = queryset.filter(user=movie_id)
         return queryset
+
+
+class favoriteViewSet(viewsets.ModelViewSet):
+    queryset = Playlist.objects.filter(list_type="f")
+    serializer_class = PlaylistSerializer
 
 
 class Playlist_MoviesViewSet(viewsets.ModelViewSet):
@@ -84,3 +92,14 @@ class Playlist_MoviesViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+
+    def get_queryset(self):
+        queryset = Review.objects.all()
+
+        movie_id = self.request.query_params.get('movie')
+        if movie_id is not None:
+            queryset = queryset.filter(movie=movie_id)
+        user = self.request.query_params.get('user')
+        if user is not None:
+            queryset = queryset.filter(user=user)
+        return queryset

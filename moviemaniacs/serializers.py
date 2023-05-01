@@ -3,10 +3,16 @@ from rest_framework import serializers
 from .models import CustomUser, Playlist, Review, Playlist_movie
 
 
+class UserPlaylistsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Playlist
+        fields = ['id', 'user', 'title',]
+
+
 class Playlist_MoviesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Playlist_movie
-        fields = ['id', 'playlist_id', 'movie_id', 'movie_name']
+        fields = ['id', 'playlist', 'movie_id', 'movie_name', 'poster']
 
 
 class PlaylistSerializer(serializers.ModelSerializer):
@@ -14,7 +20,19 @@ class PlaylistSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Playlist
-        fields = ['id', 'user', 'title', 'movies']
+        fields = ['id', 'user', 'title', 'list_type', 'movies']
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Playlist
+        fields = ['id', 'title', 'user']
+
+
+class PlaylistWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Playlist
+        fields = ['user', 'title', 'list_type']
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -37,10 +55,10 @@ class CustomUserSerializer(serializers.ModelSerializer):
         if password is not None:
             instance.set_password(password)
         instance.save()
-
         playlist = Playlist.objects.create(
-            user=instance, title=f"{instance.first_name}'s Favorites")
-        # playlist = Playlist.objects.create(user=instance)
+            user=instance, title=f"{instance.first_name}'s Favorites", list_type="f")
+        playlist = Playlist.objects.create(
+            user=instance, title=f"{instance.first_name}'s Watchlist", list_type="w")
         return instance
 
 # class UserReadSerializer(serializers.ModelSerializer):
@@ -53,5 +71,5 @@ class CustomUserSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ['id', 'user', 'movie_id', 'headline',
-                  'movie_rating', 'description', 'date_posted']
+        fields = ['id', 'user', 'movie', 'headline',
+                  'movie_rating', 'description', 'date_posted', 'username']
